@@ -151,7 +151,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-100 via-yellow-200 to-yellow-300">
+    <div className="min-h-screen bg-yellow-400">
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         {/* Header */}
         <div className="text-center mb-12">
