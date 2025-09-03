@@ -12,8 +12,10 @@ import {
   CheckCircle,
   PauseCircle,
   XCircle,
-  AlertTriangle
+  AlertTriangle,
+  Globe
 } from 'lucide-react';
+import { translations, Translation } from './translations';
 
 interface Subscription {
   id: string;
@@ -198,10 +200,11 @@ const servicesByCategory: Record<string, string[]> = {
     'Cohere API', 'AI21 Labs API', 'Stability AI API'
   ]
 };
+
 const statusConfig = {
-  active: { icon: CheckCircle, color: 'text-green-500', bg: 'bg-green-50', label: 'Активна' },
-  paused: { icon: PauseCircle, color: 'text-yellow-500', bg: 'bg-yellow-50', label: 'Приостановлена' },
-  cancelled: { icon: XCircle, color: 'text-red-500', bg: 'bg-red-50', label: 'Отменена' }
+  active: { icon: CheckCircle, color: 'text-green-500', bg: 'bg-green-50' },
+  paused: { icon: PauseCircle, color: 'text-yellow-500', bg: 'bg-yellow-50' },
+  cancelled: { icon: XCircle, color: 'text-red-500', bg: 'bg-red-50' }
 };
 
 function App() {
@@ -210,6 +213,7 @@ function App() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [language, setLanguage] = useState<'ru' | 'en'>('ru');
   const [formData, setFormData] = useState({
     name: '',
     category: '',
@@ -222,6 +226,7 @@ function App() {
 
   const availableServices = formData.category ? servicesByCategory[formData.category] || [] : [];
   const showServiceDropdown = availableServices.length > 0;
+  const t: Translation = translations[language];
 
   useEffect(() => {
     const saved = localStorage.getItem('ai-subscriptions');
@@ -293,7 +298,7 @@ function App() {
   };
 
   const handleDelete = (id: string) => {
-    if (confirm('Вы уверены, что хотите удалить эту подписку?')) {
+    if (confirm(t.deleteConfirmation)) {
       setSubscriptions(prev => prev.filter(sub => sub.id !== id));
     }
   };
@@ -328,11 +333,38 @@ function App() {
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         {/* Header */}
         <div className="text-center mb-12">
+          <div className="flex justify-end mb-4">
+            <div className="flex items-center gap-2 bg-white rounded-xl p-1 shadow-lg">
+              <button
+                onClick={() => setLanguage('ru')}
+                className={`px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 ${
+                  language === 'ru' 
+                    ? 'bg-blue-500 text-white shadow-md' 
+                    : 'text-gray-600 hover:bg-gray-100'
+                }`}
+              >
+                <Globe className="w-4 h-4" />
+                RU
+              </button>
+              <button
+                onClick={() => setLanguage('en')}
+                className={`px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 ${
+                  language === 'en' 
+                    ? 'bg-blue-500 text-white shadow-md' 
+                    : 'text-gray-600 hover:bg-gray-100'
+                }`}
+              >
+                <Globe className="w-4 h-4" />
+                EN
+              </button>
+            </div>
+          </div>
+          
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl mb-4">
             <Bot className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">AI Subscription Manager</h1>
-          <p className="text-lg text-gray-600">Управляйте всеми своими AI-подписками в одном месте</p>
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">{t.title}</h1>
+          <p className="text-lg text-gray-600">{t.subtitle}</p>
         </div>
 
         {/* Stats Cards */}
@@ -343,7 +375,7 @@ function App() {
                 <DollarSign className="w-6 h-6 text-green-600" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Месячные расходы</p>
+                <p className="text-sm font-medium text-gray-600">{t.monthlySpend}</p>
                 <p className="text-2xl font-bold text-gray-900">${totalMonthlySpend.toFixed(2)}</p>
               </div>
             </div>
@@ -355,7 +387,7 @@ function App() {
                 <CheckCircle className="w-6 h-6 text-blue-600" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Активные подписки</p>
+                <p className="text-sm font-medium text-gray-600">{t.activeSubscriptions}</p>
                 <p className="text-2xl font-bold text-gray-900">
                   {subscriptions.filter(sub => sub.status === 'active').length}
                 </p>
@@ -369,7 +401,7 @@ function App() {
                 <AlertTriangle className="w-6 h-6 text-orange-600" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Скоро продление</p>
+                <p className="text-sm font-medium text-gray-600">{t.renewingSoon}</p>
                 <p className="text-2xl font-bold text-gray-900">{getUpcomingRenewals().length}</p>
               </div>
             </div>
@@ -384,7 +416,7 @@ function App() {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
                   type="text"
-                  placeholder="Поиск подписок..."
+                  placeholder={t.searchPlaceholder}
                   className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
@@ -398,10 +430,10 @@ function App() {
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
                 >
-                  <option value="all">Все статусы</option>
-                  <option value="active">Активные</option>
-                  <option value="paused">Приостановленные</option>
-                  <option value="cancelled">Отмененные</option>
+                  <option value="all">{t.allStatuses}</option>
+                  <option value="active">{t.active}</option>
+                  <option value="paused">{t.paused}</option>
+                  <option value="cancelled">{t.cancelled}</option>
                 </select>
               </div>
             </div>
@@ -411,7 +443,7 @@ function App() {
               className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-200 flex items-center gap-2 shadow-lg"
             >
               <Plus className="w-5 h-5" />
-              Добавить подписку
+              {t.addSubscription}
             </button>
           </div>
         </div>
@@ -421,14 +453,14 @@ function App() {
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
             <div className="bg-white rounded-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
               <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                {editingId ? 'Редактировать подписку' : 'Добавить подписку'}
+                {editingId ? t.editSubscriptionTitle : t.addSubscriptionTitle}
               </h2>
               
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      {showServiceDropdown ? 'Выберите сервис' : 'Название сервиса'}
+                      {showServiceDropdown ? t.selectService : t.serviceName}
                     </label>
                     {showServiceDropdown ? (
                       <select
@@ -437,11 +469,11 @@ function App() {
                         value={formData.name}
                         onChange={(e) => setFormData(prev => ({...prev, name: e.target.value}))}
                       >
-                        <option value="">Выберите сервис</option>
+                        <option value="">{t.selectService}</option>
                         {availableServices.map(service => (
                           <option key={service} value={service}>{service}</option>
                         ))}
-                        <option value="custom">Другой сервис (ввести вручную)</option>
+                        <option value="custom">{t.otherService}</option>
                       </select>
                     ) : (
                       <input
@@ -450,7 +482,7 @@ function App() {
                         className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                         value={formData.name}
                         onChange={(e) => setFormData(prev => ({...prev, name: e.target.value}))}
-                        placeholder="Введите название сервиса..."
+                        placeholder={t.enterServiceName}
                       />
                     )}
                     
@@ -459,7 +491,7 @@ function App() {
                         type="text"
                         required
                         className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all mt-2"
-                        placeholder="Введите название сервиса..."
+                        placeholder={t.enterServiceName}
                         onChange={(e) => setFormData(prev => ({...prev, name: e.target.value}))}
                       />
                     )}
@@ -467,7 +499,7 @@ function App() {
                   
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Категория
+                      {t.category}
                     </label>
                     <select
                       required
@@ -475,7 +507,7 @@ function App() {
                       value={formData.category}
                       onChange={(e) => handleCategoryChange(e.target.value)}
                     >
-                      <option value="">Выберите категорию</option>
+                      <option value="">{t.selectCategory}</option>
                       {categories.map(cat => (
                         <option key={cat} value={cat}>{cat}</option>
                       ))}
@@ -484,7 +516,7 @@ function App() {
                   
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Стоимость ($)
+                      {t.cost}
                     </label>
                     <input
                       type="number"
@@ -499,36 +531,36 @@ function App() {
                   
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Период оплаты
+                      {t.billingPeriod}
                     </label>
                     <select
                       className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                       value={formData.billingCycle}
                       onChange={(e) => setFormData(prev => ({...prev, billingCycle: e.target.value as 'monthly' | 'yearly'}))}
                     >
-                      <option value="monthly">Ежемесячно</option>
-                      <option value="yearly">Ежегодно</option>
+                      <option value="monthly">{t.monthly}</option>
+                      <option value="yearly">{t.yearly}</option>
                     </select>
                   </div>
                   
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Статус
+                      {t.status}
                     </label>
                     <select
                       className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                       value={formData.status}
                       onChange={(e) => setFormData(prev => ({...prev, status: e.target.value as 'active' | 'paused' | 'cancelled'}))}
                     >
-                      <option value="active">Активна</option>
-                      <option value="paused">Приостановлена</option>
-                      <option value="cancelled">Отменена</option>
+                      <option value="active">{t.activeStatus}</option>
+                      <option value="paused">{t.pausedStatus}</option>
+                      <option value="cancelled">{t.cancelledStatus}</option>
                     </select>
                   </div>
                   
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Дата следующего платежа
+                      {t.nextBillingDate}
                     </label>
                     <input
                       type="date"
@@ -542,14 +574,14 @@ function App() {
                 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Описание (опционально)
+                    {t.description}
                   </label>
                   <textarea
                     className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all resize-none"
                     rows={3}
                     value={formData.description}
                     onChange={(e) => setFormData(prev => ({...prev, description: e.target.value}))}
-                    placeholder="Дополнительные заметки о подписке..."
+                    placeholder={t.descriptionPlaceholder}
                   />
                 </div>
                 
@@ -558,14 +590,14 @@ function App() {
                     type="submit"
                     className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-200 font-medium"
                   >
-                    {editingId ? 'Обновить' : 'Добавить'}
+                    {editingId ? t.update : t.add}
                   </button>
                   <button
                     type="button"
                     onClick={resetForm}
                     className="flex-1 px-6 py-3 bg-gray-200 text-gray-800 rounded-xl hover:bg-gray-300 transition-all duration-200 font-medium"
                   >
-                    Отмена
+                    {t.cancel}
                   </button>
                 </div>
               </form>
@@ -612,12 +644,12 @@ function App() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <CreditCard className="w-4 h-4 text-gray-400" />
-                      <span className="text-sm text-gray-600">Стоимость</span>
+                      <span className="text-sm text-gray-600">{t.cost.replace(' ($)', '')}</span>
                     </div>
                     <span className="text-lg font-semibold text-gray-900">
                       ${subscription.price.toFixed(2)}
                       <span className="text-sm font-normal text-gray-500">
-                        /{subscription.billingCycle === 'monthly' ? 'мес' : 'год'}
+                        {subscription.billingCycle === 'monthly' ? t.perMonth : t.perYear}
                       </span>
                     </span>
                   </div>
@@ -625,7 +657,7 @@ function App() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Calendar className="w-4 h-4 text-gray-400" />
-                      <span className="text-sm text-gray-600">Следующий платеж</span>
+                      <span className="text-sm text-gray-600">{t.nextPayment}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       {isExpiringSoon && (
@@ -638,11 +670,12 @@ function App() {
                   </div>
                   
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Статус</span>
+                    <span className="text-sm text-gray-600">{t.status}</span>
                     <div className={`flex items-center gap-2 px-3 py-1 rounded-full ${statusConfig[subscription.status].bg}`}>
                       <StatusIcon className={`w-4 h-4 ${statusConfig[subscription.status].color}`} />
                       <span className={`text-sm font-medium ${statusConfig[subscription.status].color}`}>
-                        {statusConfig[subscription.status].label}
+                        {subscription.status === 'active' ? t.activeStatus : 
+                         subscription.status === 'paused' ? t.pausedStatus : t.cancelledStatus}
                       </span>
                     </div>
                   </div>
@@ -662,12 +695,12 @@ function App() {
           <div className="text-center py-12">
             <Bot className="w-16 h-16 text-gray-300 mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              {subscriptions.length === 0 ? 'Нет подписок' : 'Подписки не найдены'}
+              {subscriptions.length === 0 ? t.noSubscriptions : t.noSubscriptionsFound}
             </h3>
             <p className="text-gray-600 mb-4">
               {subscriptions.length === 0
-                ? 'Добавьте свою первую AI-подписку для начала отслеживания'
-                : 'Попробуйте изменить фильтры или поисковый запрос'
+                ? t.noSubscriptionsDescription
+                : t.noSubscriptionsFoundDescription
               }
             </p>
             {subscriptions.length === 0 && (
@@ -676,7 +709,7 @@ function App() {
                 className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-200 inline-flex items-center gap-2"
               >
                 <Plus className="w-5 h-5" />
-                Добавить подписку
+                {t.addSubscription}
               </button>
             )}
           </div>
