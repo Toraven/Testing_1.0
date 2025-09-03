@@ -32,6 +32,16 @@ const categories = [
   'Code Assistant',
   'Data Analytics',
   'Voice/Audio AI',
+  'Video Generation',
+  'Music/Audio Creation',
+  'Writing Assistant',
+  'Translation Services',
+  'Research Tools',
+  'Design Tools',
+  'Marketing AI',
+  'Productivity Tools',
+  'Education/Learning',
+  'Business Intelligence',
   'Other'
 ];
 
