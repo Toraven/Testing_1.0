@@ -58,6 +58,146 @@ const categories = [
   'Other'
 ];
 
+const servicesByCategory: Record<string, string[]> = {
+  'ChatGPT/Language Models': [
+    'ChatGPT Plus', 'ChatGPT Team', 'Claude Pro', 'Claude Team', 'Gemini Advanced', 
+    'Perplexity Pro', 'Poe', 'Character.AI Plus', 'Replika Pro', 'Jasper AI',
+    'Copy.ai Pro', 'Writesonic', 'Rytr', 'QuillBot Premium'
+  ],
+  'Image Generation': [
+    'Midjourney', 'DALL-E 3', 'Stable Diffusion Plus', 'Adobe Firefly',
+    'Canva Pro', 'Runway ML', 'Leonardo.ai', 'Artbreeder', 'NightCafe',
+    'DeepAI Pro', 'Craiyon Pro', 'Photosonic'
+  ],
+  'Code Assistant': [
+    'GitHub Copilot', 'Cursor Pro', 'Tabnine Pro', 'CodeWhisperer',
+    'Replit Hacker', 'Codeium Pro', 'Sourcegraph Cody', 'DeepCode',
+    'Kite Pro', 'IntelliCode'
+  ],
+  'Data Analytics': [
+    'DataRobot', 'H2O.ai', 'Tableau with Einstein', 'Power BI Premium',
+    'Alteryx Designer', 'Palantir Foundry', 'Databricks', 'Snowflake',
+    'Looker', 'Sisense'
+  ],
+  'Voice/Audio AI': [
+    'ElevenLabs Pro', 'Murf AI', 'Speechify Premium', 'Descript Pro',
+    'Otter.ai Pro', 'Rev.ai', 'Sonantic', 'Resemble AI', 'WellSaid Labs',
+    'Synthesis.io'
+  ],
+  'Video Generation': [
+    'Runway ML Pro', 'Synthesia Personal', 'Loom AI', 'Pictory AI',
+    'InVideo Pro', 'Fliki Pro', 'Steve.ai', 'Animoto Pro', 'Vyond Pro',
+    'Hour One'
+  ],
+  'Music/Audio Generation': [
+    'AIVA Pro', 'Amper Music', 'Soundraw Pro', 'Boomy Pro', 'Ecrett Music',
+    'Beatoven.ai', 'Mubert Pro', 'Loudly Pro', 'Soundful Pro', 'Jukedeck'
+  ],
+  'Writing Assistant': [
+    'Grammarly Premium', 'ProWritingAid Premium', 'Hemingway Editor Plus',
+    'Wordtune Premium', 'Notion AI', 'Lex', 'Sudowrite', 'NovelAI',
+    'ShortlyAI', 'Article Forge'
+  ],
+  'Translation Services': [
+    'DeepL Pro', 'Google Translate API', 'Microsoft Translator', 'Reverso Premium',
+    'Linguee Premium', 'SYSTRAN Pure Neural', 'SDL Trados', 'Phrase',
+    'Lokalise', 'Crowdin Enterprise'
+  ],
+  'OCR/Document Processing': [
+    'Adobe Acrobat Pro', 'ABBYY FineReader', 'Tesseract Premium', 'Nanonets',
+    'Docparser', 'Rossum', 'Mindee', 'Klippa', 'Extractable', 'FormX'
+  ],
+  'Automation/Workflow': [
+    'Zapier Professional', 'Make Premium', 'UiPath', 'Automation Anywhere',
+    'Blue Prism', 'Microsoft Power Automate', 'Nintex', 'ProcessStreet',
+    'Monday.com Pro', 'Airtable Pro'
+  ],
+  'Research Assistant': [
+    'Semantic Scholar API', 'Elicit Plus', 'Consensus Premium', 'ResearchGate Premium',
+    'Zotero Premium', 'Mendeley Premium', 'Scholarcy Premium', 'SciSpace Pro',
+    'Connected Papers Pro', 'Iris.ai'
+  ],
+  'Design Tools': [
+    'Figma Professional', 'Adobe Creative Cloud', 'Sketch', 'Canva Pro',
+    'Framer Pro', 'InVision Pro', 'Marvel Pro', 'Principle', 'ProtoPie',
+    'Zeplin'
+  ],
+  'Marketing AI': [
+    'HubSpot Marketing Hub', 'Marketo Engage', 'Pardot', 'Mailchimp Premium',
+    'Constant Contact Plus', 'Campaign Monitor Premium', 'GetResponse MAX',
+    'ActiveCampaign Plus', 'ConvertKit Creator Pro', 'Drip Pro'
+  ],
+  'SEO Tools': [
+    'SEMrush Pro', 'Ahrefs Standard', 'Moz Pro', 'Screaming Frog SEO Spider',
+    'Majestic Premium', 'SpyFu Professional', 'KWFinder Premium', 'Serpstat',
+    'BrightEdge', 'Conductor'
+  ],
+  'Social Media AI': [
+    'Hootsuite Professional', 'Buffer Pro', 'Sprout Social Standard',
+    'Later Premium', 'SocialBee Premium', 'MeetEdgar', 'Loomly Premium',
+    'CoSchedule Pro', 'Sendible Premium', 'Agorapulse Pro'
+  ],
+  'Email Assistant': [
+    'Boomerang Premium', 'Mixmax Premium', 'Outreach Pro', 'SalesLoft',
+    'HubSpot Sales Hub', 'Mailshake', 'Reply.io', 'Woodpecker.co',
+    'Lemlist', 'Apollo.io'
+  ],
+  'Presentation Tools': [
+    'Beautiful.ai Pro', 'Gamma Plus', 'Tome Pro', 'Slidebean Premium',
+    'Prezi Plus', 'Canva Pro', 'Pitch Pro', 'Genially Premium',
+    'Visme Premium', 'Haiku Deck Premium'
+  ],
+  'Photo Editing': [
+    'Adobe Photoshop', 'Adobe Lightroom', 'Luminar AI', 'Skylum Aurora HDR',
+    'Topaz Labs AI', 'ON1 Photo RAW', 'Capture One Pro', 'Affinity Photo',
+    'GIMP Premium', 'Canva Pro'
+  ],
+  'Content Creation': [
+    'Loom Pro', 'Camtasia', 'ScreenFlow', 'OBS Studio Pro', 'Filmora Pro',
+    'Adobe Premiere Pro', 'Final Cut Pro', 'DaVinci Resolve Studio',
+    'Kapwing Pro', 'InVideo Pro'
+  ],
+  'Chatbots/Customer Service': [
+    'Intercom Pro', 'Zendesk Chat', 'Drift Premium', 'Tidio Premium',
+    'LiveChat Premium', 'Freshchat Pro', 'Crisp Pro', 'Tawk.to Premium',
+    'Olark Pro', 'Pure Chat Pro'
+  ],
+  'Productivity Tools': [
+    'Notion Pro', 'Obsidian Catalyst', 'Roam Research Pro', 'RemNote Pro',
+    'Logseq Pro', 'Craft Premium', 'Bear Pro', 'Ulysses Premium',
+    'Scrivener', 'MindMeister Pro'
+  ],
+  'Learning/Education': [
+    'Coursera Plus', 'Udemy Pro', 'MasterClass', 'Skillshare Premium',
+    'LinkedIn Learning Premium', 'Pluralsight Premium', 'Codecademy Pro',
+    'DataCamp Premium', 'edX Verified Certificate', 'Khan Academy'
+  ],
+  'Health/Fitness AI': [
+    'MyFitnessPal Premium', 'Noom Premium', 'Fitbit Premium', 'Strava Premium',
+    'Nike Training Club Premium', 'Peloton Digital', 'Calm Premium',
+    'Headspace Plus', 'Sleep Cycle Premium', 'Oura Ring Membership'
+  ],
+  'Finance/Trading AI': [
+    'TradingView Pro', 'Bloomberg Terminal', 'Refinitiv Eikon', 'FactSet',
+    'Morningstar Premium', 'YCharts Professional', 'S&P Capital IQ',
+    'PitchBook', 'CB Insights', 'Crunchbase Pro'
+  ],
+  'Gaming AI': [
+    'NVIDIA GeForce Now', 'Google Stadia Pro', 'Xbox Game Pass Ultimate',
+    'PlayStation Plus Premium', 'EA Play Pro', 'Ubisoft Plus',
+    'Apple Arcade', 'Amazon Luna Plus', 'Shadow PC', 'Parsec Pro'
+  ],
+  'Security/Privacy': [
+    'NordVPN', 'ExpressVPN', 'Surfshark', 'CyberGhost VPN', 'ProtonVPN Plus',
+    'Bitdefender Premium', 'Norton 360', 'Kaspersky Premium', 'McAfee Total Protection',
+    'Malwarebytes Premium'
+  ],
+  'API Services': [
+    'OpenAI API', 'Anthropic Claude API', 'Google Cloud AI APIs', 'AWS AI Services',
+    'Microsoft Azure Cognitive Services', 'IBM Watson APIs', 'Hugging Face Pro',
+    'Cohere API', 'AI21 Labs API', 'Stability AI API'
+  ]
+};
 const statusConfig = {
   active: { icon: CheckCircle, color: 'text-green-500', bg: 'bg-green-50', label: 'Активна' },
   paused: { icon: PauseCircle, color: 'text-yellow-500', bg: 'bg-yellow-50', label: 'Приостановлена' },
@@ -79,6 +219,9 @@ function App() {
     nextBilling: '',
     description: ''
   });
+
+  const availableServices = formData.category ? servicesByCategory[formData.category] || [] : [];
+  const showServiceDropdown = availableServices.length > 0;
 
   useEffect(() => {
     const saved = localStorage.getItem('ai-subscriptions');
@@ -128,6 +271,13 @@ function App() {
     setEditingId(null);
   };
 
+  const handleCategoryChange = (category: string) => {
+    setFormData(prev => ({
+      ...prev,
+      category,
+      name: '' // Reset service name when category changes
+    }));
+  };
   const handleEdit = (subscription: Subscription) => {
     setFormData({
       name: subscription.name,
@@ -278,16 +428,41 @@ function App() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Название сервиса
+                      {showServiceDropdown ? 'Выберите сервис' : 'Название сервиса'}
                     </label>
-                    <input
-                      type="text"
-                      required
-                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
-                      value={formData.name}
-                      onChange={(e) => setFormData(prev => ({...prev, name: e.target.value}))}
-                      placeholder="ChatGPT Plus, Midjourney..."
-                    />
+                    {showServiceDropdown ? (
+                      <select
+                        required
+                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                        value={formData.name}
+                        onChange={(e) => setFormData(prev => ({...prev, name: e.target.value}))}
+                      >
+                        <option value="">Выберите сервис</option>
+                        {availableServices.map(service => (
+                          <option key={service} value={service}>{service}</option>
+                        ))}
+                        <option value="custom">Другой сервис (ввести вручную)</option>
+                      </select>
+                    ) : (
+                      <input
+                        type="text"
+                        required
+                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                        value={formData.name}
+                        onChange={(e) => setFormData(prev => ({...prev, name: e.target.value}))}
+                        placeholder="Введите название сервиса..."
+                      />
+                    )}
+                    
+                    {formData.name === 'custom' && (
+                      <input
+                        type="text"
+                        required
+                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all mt-2"
+                        placeholder="Введите название сервиса..."
+                        onChange={(e) => setFormData(prev => ({...prev, name: e.target.value}))}
+                      />
+                    )}
                   </div>
                   
                   <div>
@@ -298,7 +473,7 @@ function App() {
                       required
                       className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                       value={formData.category}
-                      onChange={(e) => setFormData(prev => ({...prev, category: e.target.value}))}
+                      onChange={(e) => handleCategoryChange(e.target.value)}
                     >
                       <option value="">Выберите категорию</option>
                       {categories.map(cat => (
